@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34607.119
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncomeGoalTracker", "IncomeGoalTracker\IncomeGoalTracker\IncomeGoalTracker.csproj", "{FA3B355B-18E1-4DBA-8315-2A357E2B2724}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncomeGoalTracker.Client", "IncomeGoalTracker\IncomeGoalTracker.Client\IncomeGoalTracker.Client.csproj", "{714E1B2C-6164-4D1F-8FBE-3A8BE1FBD98B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FA3B355B-18E1-4DBA-8315-2A357E2B2724}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA3B355B-18E1-4DBA-8315-2A357E2B2724}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA3B355B-18E1-4DBA-8315-2A357E2B2724}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA3B355B-18E1-4DBA-8315-2A357E2B2724}.Release|Any CPU.Build.0 = Release|Any CPU
+		{714E1B2C-6164-4D1F-8FBE-3A8BE1FBD98B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{714E1B2C-6164-4D1F-8FBE-3A8BE1FBD98B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{714E1B2C-6164-4D1F-8FBE-3A8BE1FBD98B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{714E1B2C-6164-4D1F-8FBE-3A8BE1FBD98B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {097E0383-9E70-4C99-BADF-35CE27072DBA}
+	EndGlobalSection
+EndGlobal
