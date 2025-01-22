@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncomeGoalTracker", "Income
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncomeGoalTracker.Client", "IncomeGoalTracker\IncomeGoalTracker.Client\IncomeGoalTracker.Client.csproj", "{714E1B2C-6164-4D1F-8FBE-3A8BE1FBD98B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncomeGoalTracker.Core", "IncomeGoalTracker.Core\IncomeGoalTracker.Core.csproj", "{1A85CDF5-22A1-41B5-A9EA-6CD03ADBCCAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{714E1B2C-6164-4D1F-8FBE-3A8BE1FBD98B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{714E1B2C-6164-4D1F-8FBE-3A8BE1FBD98B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{714E1B2C-6164-4D1F-8FBE-3A8BE1FBD98B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A85CDF5-22A1-41B5-A9EA-6CD03ADBCCAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A85CDF5-22A1-41B5-A9EA-6CD03ADBCCAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A85CDF5-22A1-41B5-A9EA-6CD03ADBCCAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A85CDF5-22A1-41B5-A9EA-6CD03ADBCCAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
