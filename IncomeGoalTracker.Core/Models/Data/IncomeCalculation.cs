@@ -27,7 +27,4 @@ namespace IncomeGoalTracker.Core.Models.Data
         }
         // ---Methods---
     }
-
-
-}
 }

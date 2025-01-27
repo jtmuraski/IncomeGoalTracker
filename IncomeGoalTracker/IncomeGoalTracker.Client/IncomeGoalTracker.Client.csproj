@@ -13,4 +13,8 @@
     <PackageReference Include="MudBlazor" Version="7.*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\IncomeGoalTracker.Core\IncomeGoalTracker.Core.csproj" />
+  </ItemGroup>
+
 </Project>

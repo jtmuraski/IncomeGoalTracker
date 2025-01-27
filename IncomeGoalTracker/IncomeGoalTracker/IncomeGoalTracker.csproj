@@ -8,6 +8,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\..\IncomeGoalTracker.Core\IncomeGoalTracker.Core.csproj" />
     <ProjectReference Include="..\IncomeGoalTracker.Client\IncomeGoalTracker.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.*" />
   </ItemGroup>
