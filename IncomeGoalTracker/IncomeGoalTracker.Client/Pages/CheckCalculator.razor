@@ -1,0 +1,25 @@
+﻿@page "/CheckCalculator"
+<h3>CheckCalculator</h3>
+
+<MudNumericField @bind-Value="_taxPercentage" Label="Tax Percentage" Format="P1" T="decimal?" Variant="Variant.Outlined"></MudNumericField>
+<MudNumericField @bind-Value="_sharePercetnage" Label="Share Percentage" Format="P1" T="decimal?" Variant="Variant.Outlined"></MudNumericField>
+<MudNumericField @bind-Value="_deductionAmount" Label="Deduction Amount" Variant="Variant.Outlined"></MudNumericField>
+<MudNumericField @bind-Value="_averageBilable" Label="Average Billable" Min="0" Variant="Variant.Outlined"></MudNumericField>
+<MudSlider @bind-value="_client" Variant="Variant.Filled" Step="1">Number of Clients: @_client.ToString()</MudSlider>
+
+
+
+@code {
+    // Input Values
+    int _client = 0;
+    decimal? _taxPercentage;
+    decimal? _sharePercetnage;
+    decimal? _deductionAmount;
+    decimal? _averageBilable;
+
+    // Calculated Values
+    decimal? _taxDollar;
+    decimal? _shareDollars;
+    decimal? _netAmount;
+
+}
