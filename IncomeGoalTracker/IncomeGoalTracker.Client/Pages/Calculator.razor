@@ -3,12 +3,13 @@
 
 <h3>Calculator</h3>
 
+
 <EditForm Model="@calc" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <MudGrid>
         <MudCard>
             <MudCardContent>
-                <MudNumericField Label="Income Goal (After taxes)" @bind-Value="calc.IncomeGoal" For="@(() => calc.IncomeGoal)"/>
+                <MudNumericField Label="Paycheck Goal (Before taxes)" @bind-Value="calc.IncomeGoal" For="@(() => calc.IncomeGoal)"/>
                 <MudNumericField Label="Savings Goal (Amount after budget)" @bind-Value="calc.SavingsGoal" For="@(() => calc.SavingsGoal)" />
                 <MudNumericField Label="Share Percentage" @bind-Value="calc.SharePercentage" For="@(() => calc.SharePercentage)" />
                 <MudNumericField Label="Tax Percentage" @bind-Value="calc.Taxpercentage" For="@(() => calc.Taxpercentage)" />
@@ -38,7 +39,7 @@
 
     public void OnValidSubmit()
     {
-        postDeductionHourly = (calc.AverageBillablePerClient * calc.SharePercentage) * calc.Taxpercentage;
+        postDeductionHourly = (calc.AverageBillablePerClient * (calc.SharePercentage/100)) * (calc.Taxpercentage/100);
         clientsNeededForBudget = (int)Math.Ceiling(calc.IncomeGoal / postDeductionHourly);
         clientsNeededWithSavings = (int)Math.Ceiling((calc.IncomeGoal + calc.SavingsGoal) / postDeductionHourly);
         calcComplete = true;
