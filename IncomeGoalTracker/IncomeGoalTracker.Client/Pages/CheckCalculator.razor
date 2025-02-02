@@ -1,11 +1,27 @@
 ﻿@page "/CheckCalculator"
+@inject IJSRuntime JSRuntime
+
 <h3>CheckCalculator</h3>
 
 <MudNumericField @bind-Value="_taxPercentage" Label="Tax Percentage" T="double?" Variant="Variant.Outlined" Min="0" Max="100"></MudNumericField>
 <MudNumericField @bind-Value="_sharePercentage" Label="Share Percentage" T="double?" Variant="Variant.Outlined" Min="0" Max="100"></MudNumericField>
 <MudNumericField @bind-Value="_deductionAmount" Label="Deduction Amount" Variant="Variant.Outlined"></MudNumericField>
-<MudNumericField @bind-Value="_averageBilable" Label="Average Billable" Min="0" Variant="Variant.Outlined"></MudNumericField>
-<MudSlider @bind-value="_client" Variant="Variant.Filled" Step="1" Min="0" Max="35">Number of Clients: @_client.ToString()</MudSlider>
+<MudNumericField @bind-Value="_averageBillable" Label="Average Billable" Min="0" Variant="Variant.Outlined"></MudNumericField>
+<MudSlider @bind-value="_client" Variant="Variant.Filled" Step="1" Min="0" Max="35" @onchange="HandleValueChange">Number of Clients: @_client.ToString()</MudSlider>
+
+@if(_total is null)
+{
+    <i>Once all values are set, your calculations will appear here...</i>
+}
+else
+{
+    <i>Below numbers are shown per week</i>
+    <h3>Billed Amound:</h3><span>@_total?.ToString("C2")</span>
+    <h3>Your Share</h3><span>@_shareDollars?.ToString("C2")</span>
+    <h3>Taxes:</h3><span>@_taxDollars?.ToString("C2")</span>
+    <h3>Weekly Take Home</h3><span>@_netAmount?.ToString("C2")</span>
+    <h3>Estimated Check Amount (after deductions):</h3><span>@_biweekly?.ToString("C2")</span>
+}
 
 
 
@@ -13,14 +29,50 @@
     // Input Values
     public int _client = 0;
     public double? _taxPercentage;
-    double? _sharePercentage;
-    decimal? _deductionAmount;
-    decimal? _averageBilable;
+    public double? _sharePercentage;
+    public decimal? _deductionAmount;
+    public decimal? _averageBillable;
 
     // Calculated Values
-    decimal? _total;
-    decimal? _taxDollars;
-    decimal? _shareDollars;
-    decimal? _netAmount;
+    public decimal? _total;
+    public decimal? _taxDollars;
+    public decimal? _shareDollars;
+    public decimal? _netAmount;
+    public decimal? _biweekly;
 
+    public void CalculateTotal()
+    {
+        if(_client > 0 && _taxPercentage > 0 && _sharePercentage > 0 && _deductionAmount >= 0 && _averageBillable > 0)
+        {
+            JSRuntime.InvokeVoidAsync("console.log", "Calculating...");
+            _total = (decimal)(_client * _averageBillable);
+            _shareDollars = (decimal)(_total * ((decimal)_sharePercentage / 100));
+            _taxDollars = _shareDollars * ((decimal) _taxPercentage / 100);
+            _netAmount = _shareDollars - _taxDollars;
+            _biweekly = _netAmount * 2 - _deductionAmount;
+        }
+        else
+        {
+            JSRuntime.InvokeVoidAsync("console.log", "Change detected. But not all values filled. Not displaying changed calculations.");
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        CalculateTotal();
+    }
+
+    public async Task HandleValueChange(ChangeEventArgs e)
+    {
+        Console.WriteLine("Event handling change started");
+        JSRuntime.InvokeVoidAsync("console.log", $"Value change detected: {e.Value}");
+
+        Console.WriteLine("Before state change");
+        await InvokeAsync(StateHasChanged);
+        Console.WriteLine("State has changed");
+
+        Console.WriteLine("Calculating TOtals");
+        CalculateTotal();        
+    }
 }
