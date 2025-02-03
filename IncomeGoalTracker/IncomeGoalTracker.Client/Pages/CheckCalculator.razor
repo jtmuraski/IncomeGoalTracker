@@ -7,7 +7,7 @@
 <MudNumericField @bind-Value="_sharePercentage" Label="Share Percentage" T="double?" Variant="Variant.Outlined" Min="0" Max="100"></MudNumericField>
 <MudNumericField @bind-Value="_deductionAmount" Label="Deduction Amount" Variant="Variant.Outlined"></MudNumericField>
 <MudNumericField @bind-Value="_averageBillable" Label="Average Billable" Min="0" Variant="Variant.Outlined"></MudNumericField>
-<MudSlider @bind-value="_client" Variant="Variant.Filled" Step="1" Min="0" Max="35" @onchange="HandleValueChange">Number of Clients: @_client.ToString()</MudSlider>
+<MudSlider @bind-value="_client" Variant="Variant.Filled" Step="1" Min="0" Max="35" @onchange="CalculateTotal">Number of Clients: @_client.ToString()</MudSlider>
 
 @if(_total is null)
 {
@@ -21,6 +21,10 @@ else
     <h3>Taxes:</h3><span>@_taxDollars?.ToString("C2")</span>
     <h3>Weekly Take Home</h3><span>@_netAmount?.ToString("C2")</span>
     <h3>Estimated Check Amount (after deductions):</h3><span>@_biweekly?.ToString("C2")</span>
+
+    <MudButton Variant="Variant.Filled" OnClick="ReCalculate">
+        Re-Calculate
+    </MudButton>
 }
 
 
@@ -63,16 +67,20 @@ else
         CalculateTotal();
     }
 
-    public async Task HandleValueChange(ChangeEventArgs e)
+    private void ReCalculate()
     {
-        Console.WriteLine("Event handling change started");
-        JSRuntime.InvokeVoidAsync("console.log", $"Value change detected: {e.Value}");
-
-        Console.WriteLine("Before state change");
-        await InvokeAsync(StateHasChanged);
-        Console.WriteLine("State has changed");
-
-        Console.WriteLine("Calculating TOtals");
-        CalculateTotal();        
+        StateHasChanged();
+        CalculateTotal();
     }
-}
+
+    public void TaxChange(ChangeEventArgs e)
+    {
+        CalculateTotal();
+        Console.WriteLine($"Tax percentage changed: {e.Value}");
+    }
+
+    private void paramUpdate(decimal? value)
+    {
+        CalculateTotal();
+    }
+ }
