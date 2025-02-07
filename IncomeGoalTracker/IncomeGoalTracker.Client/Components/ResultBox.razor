@@ -1,0 +1,14 @@
+﻿<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>@title</MudText>
+        <MudText>@value.Value.ToString("C2")</MudText>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [Parameter]
+    public string title { get; set; }
+
+    [Parameter]
+    public decimal? value { get; set; }
+}
