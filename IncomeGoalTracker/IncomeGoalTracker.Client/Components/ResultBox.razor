@@ -1,14 +1,28 @@
 ﻿<MudCard Outlined="true">
     <MudCardContent>
         <MudText>@title</MudText>
-        <MudText>@value.Value.ToString("C2")</MudText>
+        @if(value.HasValue)
+        {
+            <MudText>@value.Value.ToString("C2")</MudText>
+        }
+        else if(weeks.HasValue)
+        {
+            <MudText>@weeks.Value</MudText>
+        }
+        else
+        {
+            <MudText>Not Calculated</MudText>
+        }
     </MudCardContent>
 </MudCard>
 
 @code {
     [Parameter]
-    public string title { get; set; }
+    public string? title { get; set; }
 
     [Parameter]
     public decimal? value { get; set; }
+
+    [Parameter]
+    public int? weeks { get; set; }
 }

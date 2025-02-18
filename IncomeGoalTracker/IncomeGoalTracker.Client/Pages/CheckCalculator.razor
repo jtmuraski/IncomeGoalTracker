@@ -17,16 +17,17 @@
 }
 else
 {
-    <div class="d-flex flex-auto">
+    <MudPaper Class="d-inline-flex flex-row gap-6 pa-3">
         <ResultBox title="Billed Amounr" value="@_total"></ResultBox>
         <ResultBox title="Your Share" value="@_shareDollars"></ResultBox>
         <ResultBox title="Taxes" value="@_taxDollars"></ResultBox>
         <ResultBox title="Weekly Take Home" value="@_netAmount"></ResultBox>
         <ResultBox title="Estimated Check (after deductions)" value="@_biweekly"></ResultBox>
         <ResultBox title="Extra Money" value="@_extra"></ResultBox>
-    </div>
+        <ResultBox title="Weeks to 100k" value="@_weeksToOneHundred"></ResultBox>
+    </MudPaper>
 
-    <MudButton Variant="Variant.Filled" OnClick="ReCalculate">
+    <MudButton Variant="Variant.Filled" OnClick="ReCalculate" Class="pa-4">
         Re-Calculate
     </MudButton>
 }
@@ -49,6 +50,10 @@ else
     public decimal? _netAmount;
     public decimal? _biweekly;
     public decimal? _extra;
+    public int? _weeksToOneHundred;
+
+    // Constants
+    public decimal? DOLLARGOAL = 100000.00m;
 
     public void CalculateTotal()
     {
@@ -61,6 +66,7 @@ else
             _netAmount = _shareDollars - _taxDollars;
             _biweekly = _netAmount * 2 - _deductionAmount;
             _extra = _biweekly - _budget;
+            _weeksToOneHundred = (int)Math.Round((DOLLARGOAL.GetValueOrDefault() / _shareDollars.GetValueOrDefault()), 0);
         }
         else
         {
