@@ -12,6 +12,7 @@ namespace IncomeGoalTracker.Core.Models.Ceu
         // ---Properties---
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Abbreviation { get; set; }
         public double CeusRequired { get; set; }
         public DateOnly CeuDueDate { get; set; }
         public int CertificateTrainingMonths { get; set; }
