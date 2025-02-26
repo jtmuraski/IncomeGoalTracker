@@ -39,6 +39,11 @@ namespace IncomeGoalTracker.Core.Models.Ceu
         }
 
         // ---Constructors---
+        public Certificate()
+        {
+               
+        }
+
         public Certificate(string name, double ceus, DateOnly dueDate, int months, bool inProcess)
         {
             Name = name;

@@ -9,7 +9,7 @@ using IncomeGoalTracker.Core.Models.Validations;
 
 namespace IncomeGoalTracker.Core.Models.Ceu
 {
-    public class CertificateUi
+    public class CertificateView
     {
         public int Id { get; set; }
         [Required]
