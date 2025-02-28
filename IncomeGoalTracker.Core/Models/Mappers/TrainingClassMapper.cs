@@ -10,7 +10,7 @@ namespace IncomeGoalTracker.Core.Models.Mappers
 {
     public static class TrainingClassMapper
     {
-        public static TrainingClass MapToView(TrainingClass trainingClass)
+        public static TrainingClassView MapToView(TrainingClass trainingClass)
         {
             return new TrainingClassView()
             {
@@ -24,9 +24,9 @@ namespace IncomeGoalTracker.Core.Models.Mappers
             };
         }
 
-        public static TrainingClassView MapToModel(TrainingClassView trainingClass)
+        public static TrainingClass MapToModel(TrainingClassView trainingClass)
         {
-            return new TrainingClassView()
+            return new TrainingClass()
             {
                 Id = trainingClass.Id,
                 Name = trainingClass.Name,
@@ -34,7 +34,7 @@ namespace IncomeGoalTracker.Core.Models.Mappers
                 CeusEarned = trainingClass.CeusEarned,
                 DateComplete = trainingClass.DateComplete,
                 CertificateLocation = trainingClass.CertificateLocation,
-                ClassCeus = trainingClass.ClassCeus.Select(c => ClassCeuMapper.MapToView(c)).ToList()
+                ClassCeus = trainingClass.ClassCeus.Select(c => ClassCeuMapper.MapToModel(c)).ToList()
             };
         }
     }

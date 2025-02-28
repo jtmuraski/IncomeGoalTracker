@@ -21,6 +21,10 @@ namespace IncomeGoalTracker.Core.Models.Ceu
         public List<ClassCeu> ClassCeus { get; set; } = new List<ClassCeu>();
 
         // ---Constructors---
+        public TrainingClass()
+        {
+            
+        }
         public TrainingClass(string name, string provider, double ceus, DateOnly dateComplete)
         {
             Name = name;
