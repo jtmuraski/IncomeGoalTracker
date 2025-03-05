@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\UiModels\" />
+    <ProjectReference Include="..\IncomeGoalTracker.Core\IncomeGoalTracker.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.1.66" />
+    <Folder Include="Interfaces\" />
   </ItemGroup>
 
 </Project>

@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IncomeGoalTracker.Client", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IncomeGoalTracker.Core", "IncomeGoalTracker.Core\IncomeGoalTracker.Core.csproj", "{1A85CDF5-22A1-41B5-A9EA-6CD03ADBCCAA}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "TrackerDatabase", "TrackerDatabase\TrackerDatabase.sqlproj", "{B5CF6019-7556-4436-BB60-1FD1A1026F4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncomeGoalTracker.Data", "IncomeGoalTracker.Data\IncomeGoalTracker.Data.csproj", "{1DFAC085-F6BC-42D4-9BA3-9A3E75D87585}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,16 @@ Global
 		{1A85CDF5-22A1-41B5-A9EA-6CD03ADBCCAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A85CDF5-22A1-41B5-A9EA-6CD03ADBCCAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A85CDF5-22A1-41B5-A9EA-6CD03ADBCCAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5CF6019-7556-4436-BB60-1FD1A1026F4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5CF6019-7556-4436-BB60-1FD1A1026F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5CF6019-7556-4436-BB60-1FD1A1026F4D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{B5CF6019-7556-4436-BB60-1FD1A1026F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5CF6019-7556-4436-BB60-1FD1A1026F4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5CF6019-7556-4436-BB60-1FD1A1026F4D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{1DFAC085-F6BC-42D4-9BA3-9A3E75D87585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DFAC085-F6BC-42D4-9BA3-9A3E75D87585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DFAC085-F6BC-42D4-9BA3-9A3E75D87585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DFAC085-F6BC-42D4-9BA3-9A3E75D87585}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

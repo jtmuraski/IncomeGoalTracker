@@ -39,7 +39,7 @@ namespace IncomeGoalTracker.Core.Models.Ceu
 
         public bool InProcess { get; set; }
 
-        public List<TrainingClass> TrainingClasses { get; set; } = new List<TrainingClass>();
+        public List<TrainingClassView> TrainingClasses { get; set; } = new List<TrainingClassView>();
 
         [DisplayFormat(DataFormatString = "{0:F1}")]
         [DisplayName("CEU's Earned")]

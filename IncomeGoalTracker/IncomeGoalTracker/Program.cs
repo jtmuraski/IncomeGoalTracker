@@ -1,6 +1,9 @@
 using IncomeGoalTracker.Client.Pages;
 using IncomeGoalTracker.Components;
+using IncomeGoalTracker.Core.Interfaces;
+using Microsoft.Data.SqlClient;
 using MudBlazor.Services;
+using IncomeGoalTracker.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +13,8 @@ builder.Services.AddMudServices();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddSingleton<IDbConnectionFactory>(c => new SqlConnectionFactory(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
