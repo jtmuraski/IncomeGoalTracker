@@ -10,8 +10,4 @@
     <ProjectReference Include="..\IncomeGoalTracker.Core\IncomeGoalTracker.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>
