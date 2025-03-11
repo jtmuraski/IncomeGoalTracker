@@ -65,7 +65,7 @@ namespace IncomeGoalTracker.Data.Repositories
 
         public async Task<IEnumerable<Certificate>> GetAllCertificatesAsync()
         {
-            string query = @"SELET * FROM Certificate;";
+            string query = @"SELECT * FROM Certificate;";
 
             using (var connection = _conn.CreateConnection())
             {
@@ -75,7 +75,7 @@ namespace IncomeGoalTracker.Data.Repositories
 
         public async Task<Certificate> GetCertificateById(int id)
         {
-            string query = @"SELET * FROM Certificate WHERE Id = @Id;";
+            string query = @"SELECT * FROM Certificate WHERE Id = @Id;";
             
             using(var connection = _conn.CreateConnection())
             {
@@ -83,9 +83,14 @@ namespace IncomeGoalTracker.Data.Repositories
             }
         }
 
-        public Task<IEnumerable<Certificate>> GetExpiringCertificatesAsync(int days)
+        public async Task<IEnumerable<Certificate>> GetExpiringCertificatesAsync(int days)
         {
-            throw new NotImplementedException();
+            string query = @"SELECT * FROM Certificate WHERE CeuDueDate <= DATEADD(day, @Days, GETDATE());";
+
+            using(var connection = _conn.CreateConnection())
+            {
+                return await connection.QueryAsync<Certificate>(query, new {Days = days});
+            }
         }
 
         public async Task<bool> UpdateCertificateAsync(Certificate certificate)
