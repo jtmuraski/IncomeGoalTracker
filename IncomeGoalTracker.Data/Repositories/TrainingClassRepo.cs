@@ -1,4 +1,5 @@
-﻿using IncomeGoalTracker.Core.Interfaces;
+﻿using Dapper;
+using IncomeGoalTracker.Core.Interfaces;
 using IncomeGoalTracker.Core.Models.Ceu;
 using System;
 using System.Collections.Generic;
@@ -10,29 +11,78 @@ namespace IncomeGoalTracker.Data.Repositories
 {
     public class TrainingClassRepo : ITrainingClassRepo
     {
-        public Task<int> AddTrainingClassAsync(TrainingClass trainingClass)
+        private IDbConnectionFactory _conn;
+
+        public TrainingClassRepo(IDbConnectionFactory conn)
         {
-            throw new NotImplementedException();
+            _conn = conn;
         }
 
-        public Task<bool> DeleteTrainingClassAsync(int id)
+        public async Task<int> AddTrainingClassAsync(TrainingClass trainingClass)
         {
-            throw new NotImplementedException();
+           string query = @"INSERT INTO TrainingClass (Name,
+                                                    Provider,
+                                                    CeusEarned,
+                                                    DateComplate,
+                                                    CertitificateLocation)
+                                                    VALUES (@Name,
+                                                            @Provider,
+                                                            @CeusEarned,
+                                                            @DateComplate,
+                                                            @CertitificateLocation)
+                                                    SELECT CAST(SCOPE_IDENTITY() AS int);";
+
+            using (var connection = _conn.CreateConnection())
+            {
+                return await connection.QuerySingleAsync<int>(query);
+            }
         }
 
-        public Task<IEnumerable<TrainingClass>> GetAllTrainingClassesAsync()
+        public async Task<bool> DeleteTrainingClassAsync(int id)
         {
-            throw new NotImplementedException();
+            string query = @"DELETE TrainingClass WHERE Id = @Id;";
+
+            using (var connection = _conn.CreateConnection())
+            {
+               int affectedRows = await connection.ExecuteAsync(query, id);
+                return affectedRows > 0;
+            }
         }
 
-        public Task<TrainingClass> GetTrainingClassByIdAsync(int id)
+        public async Task<IEnumerable<TrainingClass>> GetAllTrainingClassesAsync()
         {
-            throw new NotImplementedException();
+            string query = @"SELECT * FROM TrainingClass;";
+
+            using (var connection = _conn.CreateConnection())
+            {
+                return await connection.QueryAsync<TrainingClass>(query);
+            }
         }
 
-        public Task<bool> UpdateTrainingClassAsync(TrainingClass trainingClass)
+        public async Task<TrainingClass> GetTrainingClassByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            string query = @"SELECT * FROM TrainingClass WHERE Id = @Id;";
+
+            using (var connection = _conn.CreateConnection())
+            {
+                return await connection.QuerySingleOrDefaultAsync<TrainingClass>(query, id);
+            }
+        }
+
+        public async Task<bool> UpdateTrainingClassAsync(TrainingClass trainingClass)
+        {
+            string query = @"UPDATE TrainingClass SET Name = @Name,
+                                                    Provider = @Provider,
+                                                    CeusEarned = @CeusEarned,
+                                                    DateComplate = @DateComplate,
+                                                    CertitificateLocation = @CertitificateLocation
+                                                    WHERE Id = @Id;";
+
+            using (var connection = _conn.CreateConnection())
+            {
+                int affectedRows = await connection.ExecuteAsync(query, trainingClass);
+                return affectedRows > 0;
+            }
         }
     }
 }
