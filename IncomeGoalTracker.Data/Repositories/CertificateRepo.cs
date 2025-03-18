@@ -48,7 +48,7 @@ namespace IncomeGoalTracker.Data.Repositories
 
             using(var connection = _conn.CreateConnection())
             {
-                int affectedRows = await connection.ExecuteAsync(query, id);
+                int affectedRows = await connection.ExecuteAsync(query, new {Id = id});
                 return affectedRows > 0;
             }
         }

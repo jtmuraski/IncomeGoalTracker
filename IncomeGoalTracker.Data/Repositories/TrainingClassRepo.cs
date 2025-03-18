@@ -23,8 +23,8 @@ namespace IncomeGoalTracker.Data.Repositories
            string query = @"INSERT INTO TrainingClass (Name,
                                                     Provider,
                                                     CeusEarned,
-                                                    DateComplate,
-                                                    CertitificateLocation)
+                                                    DateComplete,
+                                                    CertificateLocation)
                                                     VALUES (@Name,
                                                             @Provider,
                                                             @CeusEarned,
@@ -34,7 +34,7 @@ namespace IncomeGoalTracker.Data.Repositories
 
             using (var connection = _conn.CreateConnection())
             {
-                return await connection.QuerySingleAsync<int>(query);
+                return await connection.QuerySingleAsync<int>(query, trainingClass);
             }
         }
 
@@ -44,7 +44,7 @@ namespace IncomeGoalTracker.Data.Repositories
 
             using (var connection = _conn.CreateConnection())
             {
-               int affectedRows = await connection.ExecuteAsync(query, id);
+               int affectedRows = await connection.ExecuteAsync(query, new {Id = id});
                 return affectedRows > 0;
             }
         }
@@ -65,7 +65,7 @@ namespace IncomeGoalTracker.Data.Repositories
 
             using (var connection = _conn.CreateConnection())
             {
-                return await connection.QuerySingleOrDefaultAsync<TrainingClass>(query, id);
+                return await connection.QuerySingleOrDefaultAsync<TrainingClass>(query, new {Id = id});
             }
         }
 
@@ -74,8 +74,8 @@ namespace IncomeGoalTracker.Data.Repositories
             string query = @"UPDATE TrainingClass SET Name = @Name,
                                                     Provider = @Provider,
                                                     CeusEarned = @CeusEarned,
-                                                    DateComplate = @DateComplate,
-                                                    CertitificateLocation = @CertitificateLocation
+                                                    DateComplete = @DateComplate,
+                                                    CertificaterLocation = @CertitificateLocation
                                                     WHERE Id = @Id;";
 
             using (var connection = _conn.CreateConnection())

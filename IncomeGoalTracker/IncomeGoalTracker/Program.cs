@@ -4,6 +4,7 @@ using IncomeGoalTracker.Core.Interfaces;
 using Microsoft.Data.SqlClient;
 using MudBlazor.Services;
 using IncomeGoalTracker.Data;
+using IncomeGoalTracker.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,11 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddSingleton<IDbConnectionFactory>(c => new SqlConnectionFactory(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Database Repo instances
+builder.Services.AddScoped<ICertificateRepo, CertificateRepo>();
+builder.Services.AddScoped<ITrainingClassRepo, TrainingClassRepo>();
+builder.Services.AddScoped<IClassCeuRepo, ClassCeuRepo>();
 
 var app = builder.Build();
 

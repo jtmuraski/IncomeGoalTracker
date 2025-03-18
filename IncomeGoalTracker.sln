@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IncomeGoalTracker", "IncomeGoalTracker\IncomeGoalTracker\IncomeGoalTracker.csproj", "{FA3B355B-18E1-4DBA-8315-2A357E2B2724}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1DFAC085-F6BC-42D4-9BA3-9A3E75D87585} = {1DFAC085-F6BC-42D4-9BA3-9A3E75D87585}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IncomeGoalTracker.Client", "IncomeGoalTracker\IncomeGoalTracker.Client\IncomeGoalTracker.Client.csproj", "{714E1B2C-6164-4D1F-8FBE-3A8BE1FBD98B}"
 EndProject
@@ -11,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IncomeGoalTracker.Core", "I
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "TrackerDatabase", "TrackerDatabase\TrackerDatabase.sqlproj", "{B5CF6019-7556-4436-BB60-1FD1A1026F4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncomeGoalTracker.Data", "IncomeGoalTracker.Data\IncomeGoalTracker.Data.csproj", "{1DFAC085-F6BC-42D4-9BA3-9A3E75D87585}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IncomeGoalTracker.Data", "IncomeGoalTracker.Data\IncomeGoalTracker.Data.csproj", "{1DFAC085-F6BC-42D4-9BA3-9A3E75D87585}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
