@@ -28,8 +28,8 @@ namespace IncomeGoalTracker.Data.Repositories
                                                     VALUES (@Name,
                                                             @Provider,
                                                             @CeusEarned,
-                                                            @DateComplate,
-                                                            @CertitificateLocation)
+                                                            @DateComplete,
+                                                            @CertificateLocation)
                                                     SELECT CAST(SCOPE_IDENTITY() AS int);";
 
             using (var connection = _conn.CreateConnection())
