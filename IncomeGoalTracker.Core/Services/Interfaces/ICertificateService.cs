@@ -7,13 +7,13 @@ using IncomeGoalTracker.Core.Models.Ceu;
 
 namespace IncomeGoalTracker.Core.Services.Interfaces
 {
-    internal interface ICertificateService
+    public interface ICertificateService
     {
-        Task<bool> AddCertificateAsync(Certificate certificate);
-        Task<bool> DeleteCertificateAsync(int id);
-        Task<IEnumerable<Certificate>> GetAllCertificatesAsync();
-        Task<bool> UpdateCertificateAsync(Certificate certificate);
-        Task<bool> GetActiveCertificatesAsync();
+        public Task<int> AddCertificateAsync(CertificateView certificate);
+        public Task<bool> DeleteCertificateAsync(int id);
+        public Task<IEnumerable<CertificateView>> GetAllCertificatesAsync();
+        public Task<bool> UpdateCertificateAsync(CertificateView certificate);
+        public Task<IEnumerable<CertificateView>> GetActiveCertificatesAsync();
 
     }
 }

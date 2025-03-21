@@ -11,6 +11,8 @@
     <ProjectReference Include="..\..\IncomeGoalTracker.Core\IncomeGoalTracker.Core.csproj" />
     <ProjectReference Include="..\..\IncomeGoalTracker.Data\IncomeGoalTracker.Data.csproj" />
     <ProjectReference Include="..\IncomeGoalTracker.Client\IncomeGoalTracker.Client.csproj" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.23.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.*" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
   </ItemGroup>

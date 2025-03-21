@@ -22,7 +22,21 @@ builder.Services.AddScoped<ICertificateRepo, CertificateRepo>();
 builder.Services.AddScoped<ITrainingClassRepo, TrainingClassRepo>();
 builder.Services.AddScoped<IClassCeuRepo, ClassCeuRepo>();
 
-var app = builder.Build();
+// Add Logging services
+if(builder.Environment.IsDevelopment())
+{
+    builder.Services.AddLogging(logging =>
+    {
+        logging.AddConsole();
+        logging.AddDebug();
+    });
+}
+else
+{
+    builder.Services.AddApplicationInsightsTelemetry();
+}
+
+    var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
