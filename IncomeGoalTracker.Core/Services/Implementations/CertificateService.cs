@@ -24,6 +24,7 @@ namespace IncomeGoalTracker.Core.Services.Implementations
 
         public async Task<int> AddCertificateAsync(CertificateView certificate)
         {
+            _logger.LogInformation($"Adding certificate: {certificate.Name}");
             Certificate cert = CertificateMapper.MapToModel(certificate);
             int certId = await _certificateRepo.AddCertificateAsync(cert);
             return certId;

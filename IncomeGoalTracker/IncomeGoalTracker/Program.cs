@@ -5,6 +5,8 @@ using Microsoft.Data.SqlClient;
 using MudBlazor.Services;
 using IncomeGoalTracker.Data;
 using IncomeGoalTracker.Data.Repositories;
+using IncomeGoalTracker.Core.Services.Implementations;
+using IncomeGoalTracker.Core.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,9 +23,10 @@ builder.Services.AddSingleton<IDbConnectionFactory>(c => new SqlConnectionFactor
 builder.Services.AddScoped<ICertificateRepo, CertificateRepo>();
 builder.Services.AddScoped<ITrainingClassRepo, TrainingClassRepo>();
 builder.Services.AddScoped<IClassCeuRepo, ClassCeuRepo>();
+builder.Services.AddScoped<ICertificateService, CertificateService>();
 
 // Add Logging services
-if(builder.Environment.IsDevelopment())
+if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddLogging(logging =>
     {
