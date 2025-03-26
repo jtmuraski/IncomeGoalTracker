@@ -1,0 +1,17 @@
+﻿@page "/certifications/addcertification"
+@using IncomeGoalTracker.Core.Models.Ceu
+
+<h3>Add New Certification</h3>
+
+<EditForm Model="@cert" OnValidSubmit="OnValidSubmit">
+
+</EditForm>
+
+@code {
+    CertificateView cert = new CertificateView();
+
+    public void OnValidSubmit()
+    {
+        
+    }
+}

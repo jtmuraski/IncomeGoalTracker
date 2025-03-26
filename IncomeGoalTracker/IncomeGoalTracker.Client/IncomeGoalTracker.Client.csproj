@@ -17,6 +17,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\IncomeGoalTracker.Core\IncomeGoalTracker.Core.csproj" />
+    <ProjectReference Include="..\..\IncomeGoalTracker.Data\IncomeGoalTracker.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Certificates\" />
   </ItemGroup>
 
 </Project>

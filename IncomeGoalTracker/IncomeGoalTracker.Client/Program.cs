@@ -1,3 +1,7 @@
+using IncomeGoalTracker.Core.Interfaces;
+using IncomeGoalTracker.Core.Services.Implementations;
+using IncomeGoalTracker.Core.Services.Interfaces;
+using IncomeGoalTracker.Data.Repositories;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 
@@ -10,4 +14,6 @@ builder.Services.AddLogging(logging =>
     builder.Logging.SetMinimumLevel(LogLevel.Information);
 });
 
+builder.Services.AddScoped<ICertificateService, CertificateService>();
+builder.Services.AddScoped<ICertificateRepo, CertificateRepo>();
 await builder.Build().RunAsync();
