@@ -11,6 +11,7 @@
 
 <EditForm Model="@cert" OnValidSubmit="OnValidSubmit" FormName="AddCertificationForm">
     <DataAnnotationsValidator />
+    <ValidationSummary />
     <MudGrid>
         <MudCard>
             <MudCardHeader>
@@ -26,7 +27,9 @@
                 @bind-Value="@cert.CeusRequired" For="(() => cert.CeusRequired)" Min="0.0"/>
             </MudCardContent>
             <MudCardActions>
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Add Certification</MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" 
+                           Color="Color.Primary" Class="ml-auto"
+                           OnClick="(() => OnValidSubmit(context))">Add Certification</MudButton>
             </MudCardActions>
         </MudCard>
     </MudGrid>
@@ -38,22 +41,34 @@
 
     public async Task OnValidSubmit(EditContext context)
     {
-        if(_dueDate.HasValue)
+        try
         {
-            Logger.LogInformation("Attempting to save the new certification");
-
-            cert.CeuDueDate = DateOnly.FromDateTime(_dueDate.Value);
-
-            int id = await CertificateService.AddCertificateAsync(cert);
-
-            if (id > 0)
+            if(_dueDate.HasValue)
             {
-                NavigationManager.NavigateTo("/certifications/viewcertifications");
+                Logger.LogInformation("Attempting to save the new certification");
+
+                cert.CeuDueDate = DateOnly.FromDateTime(_dueDate.Value);
+
+                int id = await CertificateService.AddCertificateAsync(cert);
+
+                if (id > 0)
+                {
+                    NavigationManager.NavigateTo("/certifications/viewcertifications");
+                }
+                else
+                {
+                    Snackbar.Add("There was an error sving the certification");
+                }
             }
             else
             {
-                Snackbar.Add("There was an error sving the certification");
+                Snackbar.Add("Please enter a valid date for the certification expiration date");
             }
         }
+        catch(Exception ex)
+        {
+            Logger.LogError(ex, "Error saving the certification");
+            Snackbar.Add($"Error: {ex.Message}", Severity.Error); 
+        }   
     }
 }
