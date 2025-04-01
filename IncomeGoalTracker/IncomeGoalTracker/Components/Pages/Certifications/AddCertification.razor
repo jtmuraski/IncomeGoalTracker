@@ -3,6 +3,8 @@
 @using IncomeGoalTracker.Core.Services.Interfaces
 @inject ICertificateService CertificateService
 @inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+@inject ILogger<Certificate> Logger
 @rendermode InteractiveServer
 
 <h3>Add New Certification</h3>
@@ -19,7 +21,7 @@
                 @bind-Value="@cert.Name" For="(() => cert.Name)" />
                 <MudTextField Label="Abbreviation" HelperText="Enter short abbreviation for the certification (like LMFT)"
                 @bind-Value=@cert.Abbreviation For="(() => cert.Abbreviation)" />
-                <MudDatePicker Label="Certification Expriation Date" @bind-Date="@_dueDate" ShowToolbar="false"/>
+                <MudDatePicker Label="Certification Expriation Date" @bind-Date="@_dueDate" ShowToolbar="false" PickerVariant="PickerVariant.Dialog"/>
                 <MudNumericField Label="CEUs Required" HelperText="Total Number of CEU's required to maintain the certification"
                 @bind-Value="@cert.CeusRequired" For="(() => cert.CeusRequired)" Min="0.0"/>
             </MudCardContent>
@@ -34,18 +36,24 @@
     CertificateView cert = new CertificateView();
     DateTime? _dueDate = DateTime.Today;
 
-    public async void OnValidSubmit(EditContext context)
+    public async Task OnValidSubmit(EditContext context)
     {
-        if(_dueDate >= DateTime.Now)
+        if(_dueDate.HasValue)
         {
+            Logger.LogInformation("Attempting to save the new certification");
+
             cert.CeuDueDate = DateOnly.FromDateTime(_dueDate.Value);
-        }
 
-        int id = await CertificateService.AddCertificateAsync(cert);
+            int id = await CertificateService.AddCertificateAsync(cert);
 
-        if(id > 0)
-        {
-            NavigationManager.NavigateTo("/certifications/viewcertifications");
+            if (id > 0)
+            {
+                NavigationManager.NavigateTo("/certifications/viewcertifications");
+            }
+            else
+            {
+                Snackbar.Add("There was an error sving the certification");
+            }
         }
     }
 }
