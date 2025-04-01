@@ -7,6 +7,7 @@ using IncomeGoalTracker.Data;
 using IncomeGoalTracker.Data.Repositories;
 using IncomeGoalTracker.Core.Services.Implementations;
 using IncomeGoalTracker.Core.Services.Interfaces;
+using Microsoft.AspNetCore.Components.Server;
 
 var builder = WebApplication.CreateBuilder(args);
 

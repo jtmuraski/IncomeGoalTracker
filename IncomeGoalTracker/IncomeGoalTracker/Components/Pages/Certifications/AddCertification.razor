@@ -1,17 +1,51 @@
 ﻿@page "/certifications/addcertification"
 @using IncomeGoalTracker.Core.Models.Ceu
+@using IncomeGoalTracker.Core.Services.Interfaces
+@inject ICertificateService CertificateService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 <h3>Add New Certification</h3>
 
-<EditForm Model="@cert" OnValidSubmit="OnValidSubmit">
-
+<EditForm Model="@cert" OnValidSubmit="OnValidSubmit" FormName="AddCertificationForm">
+    <DataAnnotationsValidator />
+    <MudGrid>
+        <MudCard>
+            <MudCardHeader>
+                <h3>Add New Certification</h3>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudTextField Label="Certification Name" HelperText="Enter the name of the certification"
+                @bind-Value="@cert.Name" For="(() => cert.Name)" />
+                <MudTextField Label="Abbreviation" HelperText="Enter short abbreviation for the certification (like LMFT)"
+                @bind-Value=@cert.Abbreviation For="(() => cert.Abbreviation)" />
+                <MudDatePicker Label="Certification Expriation Date" @bind-Date="@_dueDate" ShowToolbar="false"/>
+                <MudNumericField Label="CEUs Required" HelperText="Total Number of CEU's required to maintain the certification"
+                @bind-Value="@cert.CeusRequired" For="(() => cert.CeusRequired)" Min="0.0"/>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Add Certification</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudGrid>
 </EditForm>
 
 @code {
     CertificateView cert = new CertificateView();
+    DateTime? _dueDate = DateTime.Today;
 
-    public void OnValidSubmit()
+    public async void OnValidSubmit(EditContext context)
     {
-        
+        if(_dueDate >= DateTime.Now)
+        {
+            cert.CeuDueDate = DateOnly.FromDateTime(_dueDate.Value);
+        }
+
+        int id = await CertificateService.AddCertificateAsync(cert);
+
+        if(id > 0)
+        {
+            NavigationManager.NavigateTo("/certifications/viewcertifications");
+        }
     }
 }
