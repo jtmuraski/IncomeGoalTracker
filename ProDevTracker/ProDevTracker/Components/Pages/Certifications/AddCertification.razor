@@ -11,12 +11,31 @@
 <h3>Add New Certification</h3>
 
 <RadzenTemplateForm TItem="CertificateView" Data=@cert Submit=@OnValidSubmit InvalidSubmit=@OnInvalidSubmit>
+    <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" Variant="@variant">
+        <RadzenFormField Text="Certification Name" Variant="@variant">
+            <ChildContent>
+                <RadzenTextBox @bind-Value="@cert.Name" Placeholder="Certification Name" />
+            </ChildContent>
+        </RadzenFormField>
+        <RadzenFormField Text="Abbreviation" Variant="@variant">
+            <ChildContent>
+                <RadzenTextBox @bind-Value="@cert.Abbreviation" Placeholder="Abbreviation" />
+            </ChildContent>
+            <Helper>
 
+            </Helper>
+    </RadzenStack>
 </RadzenTemplateForm>
 
 @code {
+    // Form styling presets
+    Variant variant = Variant.Outlined;
+
+    // Page properties
     private CertificateView cert = new CertificateView();
 
+
+    // Methods
     private async Task OnValidSubmit()
     {
         int id = await CertificateService.AddCertificateAsync(cert);
