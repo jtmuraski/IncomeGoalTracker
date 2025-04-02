@@ -1,6 +1,24 @@
 ﻿@page "/Certifications/ViewCertifications"
-<h3>ViewCertifications</h3>
+
+@inject NotificationService NotificationService
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
+
+
+<h3>Currently Active Certificates</h3>
+
+<!-- Certification Table -->
+
+<!-- General Actions -->
+<RadzenStack Orientation="Orientation.Horizontal">
+    <RadzenButton Click="@NavigateToAdd" Icon="add" ButtonStyle="ButtonStyle.Primary" Text="Add Certificate" />
+</RadzenStack>
 
 @code {
-
+    private void NavigateToAdd()
+    {
+        NavigationManager.NavigateTo("/Certifications/AddCertification");
+    }
 }

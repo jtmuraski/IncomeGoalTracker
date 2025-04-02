@@ -1,0 +1,29 @@
+﻿@page "/Certifications/AddCertification"
+
+@using IncomeGoalTracker.Core.Services.Interfaces
+@using IncomeGoalTracker.Core.Models.Ceu
+@using Radzen
+
+@inject NavigationManager NavigationManager
+@inject NotificationService NotificationService
+@inject ICertificateService CertificateService
+
+<h3>Add New Certification</h3>
+
+<RadzenTemplateForm TItem="CertificateView" Data=@cert Submit=@OnValidSubmit InvalidSubmit=@OnInvalidSubmit>
+
+</RadzenTemplateForm>
+
+@code {
+    private CertificateView cert = new CertificateView();
+
+    private async Task OnValidSubmit()
+    {
+        int id = await CertificateService.AddCertificateAsync(cert);
+    }
+
+    private void OnInvalidSubmit()
+    {
+        NotificationService.Notify(new NotificationMessage(){Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Please fill out all required fields."});}
+    }
+}
