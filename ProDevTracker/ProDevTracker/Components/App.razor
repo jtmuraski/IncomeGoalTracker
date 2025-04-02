@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -6,10 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="app.css" />
+    @* <link rel="stylesheet" href="app.css" /> *@
     <link rel="stylesheet" href="ProDevTracker.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <RadzenTheme Theme="material-dark" @rendermode="InteractiveAuto" />
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/standard.css">
+    <RadzenTheme Theme="material" @rendermode="InteractiveAuto" />
     <HeadOutlet />
 </head>
 
@@ -20,3 +22,26 @@
 </body>
 
 </html>
+
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; }
+
+    [Inject]
+    private ThemeService ThemeService { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (HttpContext != null)
+        {
+            var theme = HttpContext.Request.Cookies["MyApplicationTheme"];
+
+            if (!string.IsNullOrEmpty(theme))
+            {
+                ThemeService.SetTheme(theme, false);
+            }
+        }
+    }
+}

@@ -1,7 +1,12 @@
 ﻿@page "/Certifications/ViewCertifications"
 
+@using IncomeGoalTracker.Core.Models.Ceu
+@using IncomeGoalTracker.Core.Services.Interfaces
+@using Microsoft.AspNetCore.WebUtilities
+
 @inject NotificationService NotificationService
 @inject NavigationManager NavigationManager
+@inject ICertificateService CertificateService
 
 @rendermode InteractiveServer
 
@@ -10,6 +15,21 @@
 <h3>Currently Active Certificates</h3>
 
 <!-- Certification Table -->
+@if(isLoading)
+{
+    <h3>Getting Certifications list...</h3>
+}
+else
+{
+    if(certificateViews.Count == 0)
+    {
+        <h3>There are currently no active certifications. Please click 'Add Certificate' to add one</h3>
+    }
+    else
+    {
+        <h3>There are currently @certificateViews.Count certifications</h3>
+    }
+}
 
 <!-- General Actions -->
 <RadzenStack Orientation="Orientation.Horizontal">
@@ -17,6 +37,37 @@
 </RadzenStack>
 
 @code {
+    bool isLoading = true;
+    private List<CertificateView> certificateViews = new List<CertificateView>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCertificates();
+
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("success", out var success) && success == "True")
+        {
+            NotificationService.Notify(new NotificationMessage()
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Success",
+                    Detail = "Certificate Added Successfully"
+                });
+        }
+    }
+
+    private async Task LoadCertificates()
+    {
+        isLoading = true;
+
+        var certificates = await CertificateService.GetActiveCertificatesAsync();
+        certificateViews = certificates.ToList();
+
+        isLoading = false;
+        StateHasChanged();
+    }
+
     private void NavigateToAdd()
     {
         NavigationManager.NavigateTo("/Certifications/AddCertification");

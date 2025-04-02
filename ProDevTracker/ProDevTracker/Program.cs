@@ -8,6 +8,9 @@ using IncomeGoalTracker.Data.Repositories;
 using IncomeGoalTracker.Core.Interfaces;
 using IncomeGoalTracker.Core.Services.Implementations;
 using IncomeGoalTracker.Core.Services.Interfaces;
+using Dapper;
+using IncomeGoalTracker.Data.TypeHandlers;
+using System.Xml.Linq;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +23,12 @@ builder.Services.AddRazorComponents()
 // Add 3rd party UI services
 builder.Services.AddRadzenComponents();
 
+builder.Services.AddRadzenCookieThemeService(options =>
+{
+    options.Name = "MyApplicationTheme"; // The name of the cookie
+    options.Duration = TimeSpan.FromDays(365); // The duration of the cookie
+});
+
 // Budiness and database logic services
 builder.Services.AddSingleton<IDbConnectionFactory>(c => new SqlConnectionFactory(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -27,6 +36,9 @@ builder.Services.AddScoped<ICertificateRepo, CertificateRepo>();
 
 
 builder.Services.AddScoped<ICertificateService, CertificateService>();
+
+// Cusomt Type Handlers
+SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
 
 // Add Logging services
 if (builder.Environment.IsDevelopment())

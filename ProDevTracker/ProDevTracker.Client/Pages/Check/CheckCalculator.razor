@@ -1,39 +1,6 @@
 ﻿@page "/CheckCalculator"
-@inject IJSRuntime JSRuntime
-@using IncomeGoalTracker.Client.Components
-@rendermode InteractiveWebAssembly
 
 <h3>CheckCalculator</h3>
-
-<MudNumericField @bind-Value="_taxPercentage" Label="Tax Percentage" T="double?" Variant="Variant.Outlined" Min="0" Max="100"></MudNumericField>
-<MudNumericField @bind-Value="_sharePercentage" Label="Share Percentage" T="double?" Variant="Variant.Outlined" Min="0" Max="100"></MudNumericField>
-<MudNumericField @bind-Value="_deductionAmount" Label="Deduction Amount" Variant="Variant.Outlined"></MudNumericField>
-<MudNumericField @bind-Value="_averageBillable" Label="Average Billable" Min="0" Variant="Variant.Outlined"></MudNumericField>
-<MudNumericField @bind-Value="_budget" Label="Budget Amount" Min="0" Variant="Variant.Outlined"></MudNumericField>
-<MudSlider @bind-value="_client" Variant="Variant.Filled" Step="1" Min="0" Max="35" @onchange="CalculateTotal">Number of Clients: @_client.ToString()</MudSlider>
-
-@if(_total is null)
-{
-    <i>Once all values are set, your calculations will appear here...</i>
-}
-else
-{
-    <MudPaper Class="d-inline-flex flex-row gap-6 pa-3">
-        <ResultBox title="Billed Amounr" value="@_total"></ResultBox>
-        <ResultBox title="Your Share" value="@_shareDollars"></ResultBox>
-        <ResultBox title="Taxes" value="@_taxDollars"></ResultBox>
-        <ResultBox title="Weekly Take Home" value="@_netAmount"></ResultBox>
-        <ResultBox title="Estimated Check (after deductions)" value="@_biweekly"></ResultBox>
-        <ResultBox title="Extra Money" value="@_extra"></ResultBox>
-        <ResultBox title="Weeks to 100k" value="@_weeksToOneHundred"></ResultBox>
-    </MudPaper>
-
-    <MudButton Variant="Variant.Filled" OnClick="ReCalculate" Class="pa-4">
-        Re-Calculate
-    </MudButton>
-}
-
-
 
 @code {
     // Input Values
@@ -60,7 +27,6 @@ else
     {
         if(_client > 0 && _taxPercentage > 0 && _sharePercentage > 0 && _deductionAmount >= 0 && _averageBillable > 0)
         {
-            JSRuntime.InvokeVoidAsync("console.log", "Calculating...");
             _total = (decimal)(_client * _averageBillable);
             _shareDollars = (decimal)(_total * ((decimal)_sharePercentage / 100));
             _taxDollars = _shareDollars * ((decimal) _taxPercentage / 100);
@@ -71,7 +37,7 @@ else
         }
         else
         {
-            JSRuntime.InvokeVoidAsync("console.log", "Change detected. But not all values filled. Not displaying changed calculations.");
+            
         }
     }
 
