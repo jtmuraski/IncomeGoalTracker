@@ -8,9 +8,9 @@ using IncomeGoalTracker.Core.Models.Ceu;
 
 namespace IncomeGoalTracker.Core.Services.Interfaces
 {
-    internal interface ITrainingClassService
+    public interface ITrainingClassService
     {
-        Task<bool> AddTrainingClassAsync(TrainingClass trainingClass);
+        Task<bool> AddTrainingClassAsync(TrainingClassView trainingClassView, IEnumerable<ClassCeuView> classCeus);
         Task<bool> DeleteTrainingClassAsync(int id);
         Task<IEnumerable<TrainingClass>> GetAllTrainingClassesAsync();
         Task<bool> UpdateTrainingClassAsync(TrainingClass trainingClass);

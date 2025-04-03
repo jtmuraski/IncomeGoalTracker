@@ -27,13 +27,41 @@ else
     }
     else
     {
-        <h3>There are currently @certificateViews.Count certifications</h3>
+        <RadzenTable GrigLines="@DataGridGridLines.Default">
+            <RadzenTableHeader>
+                <RadzenTableHeaderRow>
+                    <RadzenTableHeaderCell>Certification Name</RadzenTableHeaderCell>
+                    <RadzenTableHeaderCell>Abbreviation</RadzenTableHeaderCell>
+                    <RadzenTableHeaderCell>Expiration Date</RadzenTableHeaderCell>
+                    <RadzenTableHeaderCell>CEU's Required</RadzenTableHeaderCell>
+                    <RadzenTableHeaderCell>CEU's Earned</RadzenTableHeaderCell>
+                    <RadzenTableHeaderCell>CEU's Needed'</RadzenTableHeaderCell>
+                </RadzenTableHeaderRow>
+            </RadzenTableHeader>
+            <RadzenTableBody>
+                @foreach (var cert in certificateViews)
+                {
+                    <RadzenTableRow>
+                        <RadzenTableCell>@cert.Name</RadzenTableCell>
+                        <RadzenTableCell>@cert.Abbreviation</RadzenTableCell>
+                        <RadzenTableCell>@cert.CeuDueDate.ToShortDateString()</RadzenTableCell>
+                        <RadzenTableCell>@cert.CeusRequired</RadzenTableCell>
+                        <RadzenTableCell>@cert.CeusEarned</RadzenTableCell>
+                        <RadzenTableCell>@(cert.CeusRequired - cert.CeusEarned)</RadzenTableCell>
+                    </RadzenTableRow>
+                }
+            </RadzenTableBody>
+        </RadzenTable>
     }
 }
 
 <!-- General Actions -->
 <RadzenStack Orientation="Orientation.Horizontal">
     <RadzenButton Click="@NavigateToAdd" Icon="add" ButtonStyle="ButtonStyle.Primary" Text="Add Certificate" />
+    @if (certificateViews.Count > 0)
+    {
+        <RadzenButton Click="@NavigateToAddTraining" Icon="edit" ButtonStyle="ButtonStyle.Secondary" Text="Add a Training Class" />
+    }
 </RadzenStack>
 
 @code {
@@ -71,5 +99,10 @@ else
     private void NavigateToAdd()
     {
         NavigationManager.NavigateTo("/Certifications/AddCertification");
+    }
+
+    private void NavigateToAddTraining()
+    {
+        NavigationManager.NavigateTo("/Certifications/AddTraining");
     }
 }

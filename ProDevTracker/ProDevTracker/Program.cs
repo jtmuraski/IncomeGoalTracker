@@ -33,9 +33,12 @@ builder.Services.AddRadzenCookieThemeService(options =>
 builder.Services.AddSingleton<IDbConnectionFactory>(c => new SqlConnectionFactory(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<ICertificateRepo, CertificateRepo>();
-
+builder.Services.AddScoped<ITrainingClassRepo, TrainingClassRepo>();
+builder.Services.AddScoped<IClassCeuRepo, ClassCeuRepo>();
 
 builder.Services.AddScoped<ICertificateService, CertificateService>();
+builder.Services.AddScoped<ITrainingClassService, TrainingClassService>();
+builder.Services.AddScoped<IClassCeuService, ClassCeuService>();
 
 // Cusomt Type Handlers
 SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
