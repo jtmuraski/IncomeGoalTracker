@@ -98,5 +98,16 @@ namespace IncomeGoalTracker.Data.Repositories
                 return rowsAffected > 0;
             }
         }
+
+        public async Task<bool> DeleteTrainingClassCeus(int trainingClassId)
+        {
+            string query = @"DELETE FROM ClassCeu WHERE TrainingClassId = @ClassId;";
+
+            using (var connection = _conn.CreateConnection())
+            {
+                int rowsAffected = await connection.ExecuteAsync(query, new { ClassId = trainingClassId });
+                return rowsAffected > 0;
+            }
+        }
     }
 }

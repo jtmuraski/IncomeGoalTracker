@@ -8,48 +8,177 @@ using IncomeGoalTracker.Core.Models.Ceu;
 using Microsoft.Extensions.Logging;
 using IncomeGoalTracker.Core.Interfaces;
 using IncomeGoalTracker.Core.Models.Mappers;
+using System.Data.SqlTypes;
+using Microsoft.Data.SqlClient;
 
 namespace IncomeGoalTracker.Core.Services.Implementations
 {
     public class TrainingClassService : ITrainingClassService
     {
         private readonly ITrainingClassRepo _trainingClassRepo;
+        private readonly IClassCeuRepo _classCeuRepo;
         private readonly ILogger<TrainingClassService> _logger;
-        public TrainingClassService(ITrainingClassRepo trainingClassRepo, ILogger<TrainingClassService> logger)
+        public TrainingClassService(ITrainingClassRepo trainingClassRepo, IClassCeuRepo classCeuRepo, ILogger<TrainingClassService> logger)
         {
             _trainingClassRepo = trainingClassRepo;
+            _classCeuRepo = classCeuRepo;
             _logger = logger;
         }
         public async Task<bool> AddTrainingClassAsync(TrainingClassView trainingClassView, IEnumerable<ClassCeuView> classCeuViews)
         {
-            _logger.LogInformation("Adding new training class");
-            TrainingClass trainingClass = TrainingClassMapper.MapToModel(trainingClassView);
-            int id = await _trainingClassRepo.AddTrainingClassAsync(trainingClass);
-            if (id > 0)
+            try
             {
-                _logger.LogInformation($"Training class added with ID: {id}");
-                return true;
+                _logger.LogInformation("Adding new training class");
+                TrainingClass trainingClass = TrainingClassMapper.MapToModel(trainingClassView);
+                int id = await _trainingClassRepo.AddTrainingClassAsync(trainingClass);
+                if (id > 0)
+                {
+                    _logger.LogInformation($"Training class added with ID: {id}");
+                    _logger.LogInformation("Allocating CEU's to Certifications");
+                    foreach (var classCeuView in classCeuViews)
+                    {
+                        ClassCeu classCeu = ClassCeuMapper.MapToModel(classCeuView);
+                        classCeu.CertificateId = id;
+                        int ceuId = await _classCeuRepo.AddClassCeuAsync(classCeu);
+                        if (ceuId > 0)
+                        {
+                            _logger.LogInformation($"Class CEU added with ID: {ceuId}");
+                        }
+                        else
+                        {
+                            _logger.LogError($"Failed to add Class");
+                        }
+                    }
+                    return true;
+                }
+                else
+                {
+                    _logger.LogError("Failed to add training class");
+                    return false;
+                }
             }
-            else
+            catch(SqlException ex)
             {
-                _logger.LogError("Failed to add training class");
-                return false;
+                _logger.LogError($"*****SQL Exception*****");
+                _logger.LogError(ex.Message);
+                _logger.LogError("************************");
+                throw;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"*****Exception*****");
+                _logger.LogError(ex.Message);
+                _logger.LogError("************************");
+                throw;
             }
         }
 
         public async Task<bool> DeleteTrainingClassAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation($"Deleting Training Class {id}");
+                bool complete = await _trainingClassRepo.DeleteTrainingClassAsync(id);
+                if(complete)
+                {
+                    bool ceuComplete = await _classCeuRepo.DeleteTrainingClassCeus(id);
+                }
+                return true;
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError($"*****SQL Exception*****");
+                _logger.LogError(ex.Message);
+                _logger.LogError("************************");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"*****Exception*****");
+                _logger.LogError(ex.Message);
+                _logger.LogError("************************");
+                throw;
+            }
         }
 
-        public async Task<IEnumerable<TrainingClass>> GetAllTrainingClassesAsync()
+        public async Task<IEnumerable<TrainingClassView>> GetAllTrainingClassesAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Getting Training Classes");
+                IEnumerable<TrainingClass> trainingClassesTemp = await _trainingClassRepo.GetAllTrainingClassesAsync();
+                List<TrainingClass> trainingClasses = trainingClassesTemp.ToList();
+                List<TrainingClassView> trainingClassViews = new List<TrainingClassView>();
+
+                if (trainingClasses.Count > 0)
+                {
+                    _logger.LogInformation("Getting Class CEU's for training classes");
+                    foreach(var trainingClass in trainingClasses)
+                    {
+                        IEnumerable<ClassCeu> classCeus = await _classCeuRepo.GetClassCeuForTrainingClassAsync(trainingClass.Id);
+                        trainingClass.ClassCeus = classCeus.ToList();
+                    }
+
+                    foreach(var trainingClass in trainingClasses)
+                    {
+                        trainingClassViews.Add(TrainingClassMapper.MapToView(trainingClass));
+                    }
+
+                    return trainingClassViews;
+                }
+                else
+                {
+                    _logger.LogInformation("No training classes found");
+                    return new List<TrainingClassView>();
+                }
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError($"*****SQL Exception*****");
+                _logger.LogError(ex.Message);
+                _logger.LogError("************************");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"*****Exception*****");
+                _logger.LogError(ex.Message);
+                _logger.LogError("************************");
+                throw;
+            }
         }
 
         public async Task<bool> UpdateTrainingClassAsync(TrainingClass trainingClass)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation($"Updating Training Class {trainingClass.Id}");
+                bool complete = await _trainingClassRepo.UpdateTrainingClassAsync(trainingClass);
+                if (complete)
+                {
+                    _logger.LogInformation($"Training Class {trainingClass.Id} updated");
+                    return true;
+                }
+                else
+                {
+                    _logger.LogError($"Failed to update Training Class {trainingClass.Id}");
+                    return false;
+                }
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError($"*****SQL Exception*****");
+                _logger.LogError(ex.Message);
+                _logger.LogError("************************");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"*****Exception*****");
+                _logger.LogError(ex.Message);
+                _logger.LogError("************************");
+                throw;
+            }
         }
     }
 }

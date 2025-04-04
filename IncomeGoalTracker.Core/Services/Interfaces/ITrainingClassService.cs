@@ -12,7 +12,7 @@ namespace IncomeGoalTracker.Core.Services.Interfaces
     {
         Task<bool> AddTrainingClassAsync(TrainingClassView trainingClassView, IEnumerable<ClassCeuView> classCeus);
         Task<bool> DeleteTrainingClassAsync(int id);
-        Task<IEnumerable<TrainingClass>> GetAllTrainingClassesAsync();
+        Task<IEnumerable<TrainingClassView>> GetAllTrainingClassesAsync();
         Task<bool> UpdateTrainingClassAsync(TrainingClass trainingClass);
     }
 }

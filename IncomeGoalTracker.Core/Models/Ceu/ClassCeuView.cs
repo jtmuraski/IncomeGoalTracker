@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace IncomeGoalTracker.Core.Models.Ceu
     {
         // UI Class for ClassCeu
         public int Id { get; set; }
+        
+        public int TrainingClassId { get; set; }
 
         [DisplayName("Certificate Name")]
         public int CertificateId { get; set; }
