@@ -81,7 +81,7 @@ namespace IncomeGoalTracker.Core.Services.Implementations
                 bool complete = await _trainingClassRepo.DeleteTrainingClassAsync(id);
                 if(complete)
                 {
-                    bool ceuComplete = await _classCeuRepo.DeleteTrainingClassCeus(id);
+                    bool ceuComplete = await _classCeuRepo.DeleteTrainingClassCeusAsync(id);
                 }
                 return true;
             }
@@ -106,11 +106,10 @@ namespace IncomeGoalTracker.Core.Services.Implementations
             try
             {
                 _logger.LogInformation("Getting Training Classes");
-                IEnumerable<TrainingClass> trainingClassesTemp = await _trainingClassRepo.GetAllTrainingClassesAsync();
-                List<TrainingClass> trainingClasses = trainingClassesTemp.ToList();
+                IEnumerable<TrainingClass> trainingClasses = await _trainingClassRepo.GetAllTrainingClassesAsync();
                 List<TrainingClassView> trainingClassViews = new List<TrainingClassView>();
 
-                if (trainingClasses.Count > 0)
+                if (trainingClasses.Any())
                 {
                     _logger.LogInformation("Getting Class CEU's for training classes");
                     foreach(var trainingClass in trainingClasses)
@@ -129,7 +128,7 @@ namespace IncomeGoalTracker.Core.Services.Implementations
                 else
                 {
                     _logger.LogInformation("No training classes found");
-                    return new List<TrainingClassView>();
+                    return Enumerable.Empty<TrainingClassView>();
                 }
             }
             catch (SqlException ex)

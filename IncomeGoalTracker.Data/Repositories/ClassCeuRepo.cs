@@ -99,7 +99,7 @@ namespace IncomeGoalTracker.Data.Repositories
             }
         }
 
-        public async Task<bool> DeleteTrainingClassCeus(int trainingClassId)
+        public async Task<bool> DeleteTrainingClassCeusAsync(int trainingClassId)
         {
             string query = @"DELETE FROM ClassCeu WHERE TrainingClassId = @ClassId;";
 

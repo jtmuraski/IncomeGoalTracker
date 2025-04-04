@@ -20,6 +20,11 @@ namespace IncomeGoalTracker.Core.Services.Implementations
             throw new NotImplementedException();
         }
 
+        public Task<bool> DeleteTrainingClassCeusAsync(int trainingClassCeu)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<ClassCeu>> GetAllClassCeusAsync()
         {
             throw new NotImplementedException();

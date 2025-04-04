@@ -14,5 +14,6 @@ namespace IncomeGoalTracker.Core.Services.Interfaces
         Task<bool> DeleteClassCeuAsync(int id);
         Task<IEnumerable<ClassCeu>> GetAllClassCeusAsync();
         Task<bool> UpdateClassCeuAsync(ClassCeu classCeu);
+        Task<bool> DeleteTrainingClassCeusAsync(int trainingClassCeu);
     }
 }
