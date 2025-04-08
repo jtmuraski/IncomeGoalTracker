@@ -1,5 +1,7 @@
 ﻿@page "/Certifications/AddTraining";
 
+@rendermode InteractiveServer
+
 @using IncomeGoalTracker.Core.Services.Interfaces
 @using IncomeGoalTracker.Core.Models.Ceu
 @using Radzen
@@ -12,7 +14,118 @@
 @inject ITrainingClassService TrainingClassService
 
 <h3>AddTrainingClass</h3>
+<RadzenTemplateForm TItem="@TrainingClassView" Data="@trainingClass" Submit="@OnValidSubmit">
+    <RadzenStack Orientation="@Orientation.Horizontal">
+        <RadzenFormField Text="Class Name" Variant="@variant">
+            <ChildContent>
+                <RadzenTextBox Name="ClassName" @bind-Value=@trainingClass.Name Placeholder="Class Name" />
+            </ChildContent>
+        </RadzenFormField>
+        <RadzenFormField Text ="Training Provider" Variant="@variant">
+            <ChildContent>
+                <RadzenTextBox Name ="Provider" @bind-Value=@trainingClass.Provider Placeholder="Provider name" />
+            </ChildContent>
+        </RadzenFormField>
+        <RadzenFormField Text="Date Completed" Variant="@variant">
+            <ChildContent>
+                <RadzenDatePicker @bind-Value=@trainingClass.DateComplete ShowTime="@false" />
+            </ChildContent>
+        </RadzenFormField>
+        <RadzenFormField Text ="Total CEU's Earned" Variant="@variant">
+            <ChildContent>
+                <RadzenNumeric Name="CeusEarned" @bind-Value=@trainingClass.CeusEarned />
+            </ChildContent>
+        </RadzenFormField>
+    </RadzenStack>
+    <RadzenStack Orientation="@Orientation.Vertical" Gap="1rem">
+        <h4>Add CEU Certification Assignments</h4>
+        <p>Click the '+' button below to assign CEU's to different certifications. You can add as many rows as needed</p>
+        <RadzenButton Click="@(() => AddClassCeu())" Text="Add CEU Assignment" Icon="add_circle" ButtonStyle="@ButtonStyle.Secondary" />
+
+        @foreach(var item in ceuView)
+        {
+            <RadzenStack Orientation="@Orientation.Horizontal">
+                <RadzenFormField Name="Certification" Variant="@variant">
+                    <ChildContent>
+                        <RadzenDropDown Data="@certificates" TextProperty="Name" ValueProperty="Id"
+                                        @bind-Value=item.CertificateId Placeholder="Select Certification" />
+                    </ChildContent>
+                </RadzenFormField>
+                <RadzenFormField Name="Ceu Hours" Variant="@variant">
+                    <ChildContent>
+                        <RadzenNumeric Name="Ceu Hours" @bind-Value=item.CeuHours Min="@minCeus" Max="@maxCeus" Step="0.1" />
+                    </ChildContent>
+                </RadzenFormField>
+                <RadzenButton Icon="delete" ButtonStyle="@ButtonStyle.Danger" Click="@(() => RemoveCeuRow(item))" />
+            </RadzenStack>
+        }
+    </RadzenStack>
+
+    <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem">
+        <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" Style="margin-right: 0.5rem" />
+        <RadzenButton ButtonType="ButtonType.Button" Text="Cancel" Click="@(() => NavigationManager.NavigateTo("/Certifications/ViewCertifications"))" />
+    </RadzenStack>
+</RadzenTemplateForm>
 
 @code {
+    // Form Syling Presets
+    Variant variant = Variant.Outlined;
 
+    // Page Properties
+    TrainingClassView trainingClass = new TrainingClassView();
+    List<ClassCeuView> ceuView = new List<ClassCeuView>();
+    List<CertificateView> certificates = new List<CertificateView>();
+
+    decimal? minCeus = (decimal?)0.10;
+    decimal? maxCeus = (decimal?)20.0;
+
+    // Page Lifecycle Methods
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var tempCertificates = await CertificateService.GetActiveCertificatesAsync();
+        certificates = tempCertificates.ToList();
+    }
+
+    // Page Actions/Methods
+    public void AddClassCeu()
+    {
+        Logger.LogInformation("Adding CEU row");
+        ceuView.Add(new ClassCeuView());
+        StateHasChanged();
+    }
+
+    public void RemoveCeuRow(ClassCeuView ceu)
+    {
+        Logger.LogInformation("Removing CEU row");
+        ceuView.Remove(ceu);
+        StateHasChanged();
+    }
+
+    public async Task OnValidSubmit(TrainingClassView trainingClass)
+    {
+        try
+        {
+            bool success = await TrainingClassService.AddTrainingClassAsync(trainingClass, ceuView);
+            NotificationService.Notify(new NotificationMessage()
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Success",
+                    Detail = "Training Class added successfully.",
+                    Duration = 4000
+                });
+            NavigationManager.NavigateTo("/Certifications/ViewCertifications");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error adding training class");
+            NotificationService.Notify(new NotificationMessage()
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "An error occurred while adding the training class.",
+                    Duration = 4000
+                });
+        }
+    }
 }

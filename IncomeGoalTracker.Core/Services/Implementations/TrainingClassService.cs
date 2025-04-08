@@ -37,8 +37,9 @@ namespace IncomeGoalTracker.Core.Services.Implementations
                     _logger.LogInformation("Allocating CEU's to Certifications");
                     foreach (var classCeuView in classCeuViews)
                     {
+                        _logger.LogInformation($"Adding CEU to Certificate Id {classCeuView.CertificateId} on training class {id}");
                         ClassCeu classCeu = ClassCeuMapper.MapToModel(classCeuView);
-                        classCeu.CertificateId = id;
+                        classCeu.TrainingClassiD = id;
                         int ceuId = await _classCeuRepo.AddClassCeuAsync(classCeu);
                         if (ceuId > 0)
                         {

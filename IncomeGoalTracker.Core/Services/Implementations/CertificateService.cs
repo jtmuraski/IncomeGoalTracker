@@ -41,6 +41,7 @@ namespace IncomeGoalTracker.Core.Services.Implementations
             List<CertificateView> certificateViews = new List<CertificateView>();
             foreach (Certificate cert in certificates)
             {
+                cert.
                 certificateViews.Add(CertificateMapper.MapToView(cert));
             }
             return certificateViews;
