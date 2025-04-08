@@ -1,0 +1,108 @@
+﻿@page "/Certifications/ViewCertifications"
+
+@using IncomeGoalTracker.Core.Models.Ceu
+@using IncomeGoalTracker.Core.Services.Interfaces
+@using Microsoft.AspNetCore.WebUtilities
+
+@inject NotificationService NotificationService
+@inject NavigationManager NavigationManager
+@inject ICertificateService CertificateService
+
+@rendermode InteractiveServer
+
+
+
+<h3>Currently Active Certificates</h3>
+
+<!-- Certification Table -->
+@if(isLoading)
+{
+    <h3>Getting Certifications list...</h3>
+}
+else
+{
+    if(certificateViews.Count == 0)
+    {
+        <h3>There are currently no active certifications. Please click 'Add Certificate' to add one</h3>
+    }
+    else
+    {
+        <RadzenTable GrigLines="@DataGridGridLines.Default">
+            <RadzenTableHeader>
+                <RadzenTableHeaderRow>
+                    <RadzenTableHeaderCell>Certification Name</RadzenTableHeaderCell>
+                    <RadzenTableHeaderCell>Abbreviation</RadzenTableHeaderCell>
+                    <RadzenTableHeaderCell>Expiration Date</RadzenTableHeaderCell>
+                    <RadzenTableHeaderCell>CEU's Required</RadzenTableHeaderCell>
+                    <RadzenTableHeaderCell>CEU's Earned</RadzenTableHeaderCell>
+                    <RadzenTableHeaderCell>CEU's Needed'</RadzenTableHeaderCell>
+                </RadzenTableHeaderRow>
+            </RadzenTableHeader>
+            <RadzenTableBody>
+                @foreach (var cert in certificateViews)
+                {
+                    <RadzenTableRow>
+                        <RadzenTableCell>@cert.Name</RadzenTableCell>
+                        <RadzenTableCell>@cert.Abbreviation</RadzenTableCell>
+                        <RadzenTableCell>@cert.CeuDueDate.ToShortDateString()</RadzenTableCell>
+                        <RadzenTableCell>@cert.CeusRequired</RadzenTableCell>
+                        <RadzenTableCell>@cert.CeusEarned</RadzenTableCell>
+                        <RadzenTableCell>@(cert.CeusRequired - cert.CeusEarned)</RadzenTableCell>
+                    </RadzenTableRow>
+                }
+            </RadzenTableBody>
+        </RadzenTable>
+    }
+}
+
+<!-- General Actions -->
+<RadzenStack Orientation="Orientation.Horizontal">
+    <RadzenButton Click="@NavigateToAdd" Icon="add" ButtonStyle="ButtonStyle.Primary" Text="Add Certificate" />
+    @if (certificateViews.Count > 0)
+    {
+        <RadzenButton Click="@NavigateToAddTraining" Icon="edit" ButtonStyle="ButtonStyle.Secondary" Text="Add a Training Class" />
+    }
+</RadzenStack>
+
+@code {
+    bool isLoading = true;
+    private List<CertificateView> certificateViews = new List<CertificateView>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCertificates();
+
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("success", out var success) && success == "True")
+        {
+            NotificationService.Notify(new NotificationMessage()
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Success",
+                    Detail = "Certificate Added Successfully"
+                });
+        }
+    }
+
+    private async Task LoadCertificates()
+    {
+        isLoading = true;
+
+        var certificates = await CertificateService.GetActiveCertificatesAsync();
+        certificateViews = certificates.ToList();
+
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private void NavigateToAdd()
+    {
+        NavigationManager.NavigateTo("/Certifications/AddCertification");
+    }
+
+    private void NavigateToAddTraining()
+    {
+        NavigationManager.NavigateTo("/Certifications/AddTraining");
+    }
+}

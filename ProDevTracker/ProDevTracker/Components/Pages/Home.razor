@@ -1,0 +1,22 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@inject NotificationService NotificationService
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+Let's try out some Radzen components:
+
+<RadzenButton Text="Click me to test!" Click=@(args => OnClick("I clicked this button")) ButtonStyle="ButtonStyle.Primary"/>
+
+@code{
+    private void OnClick(string message)
+    {
+        NotificationService.Notify(new NotificationMessage(){Severity = NotificationSeverity.Info,
+                                                             Summary = "Button clicked",
+                                                             Detail = message});
+    }
+}

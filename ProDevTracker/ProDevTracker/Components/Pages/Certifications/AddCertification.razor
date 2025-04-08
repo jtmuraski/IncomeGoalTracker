@@ -1,0 +1,80 @@
+﻿@page "/Certifications/AddCertification"
+
+@using IncomeGoalTracker.Core.Services.Interfaces
+@using IncomeGoalTracker.Core.Models.Ceu
+@using Radzen
+@using Radzen.Blazor
+
+@inject NavigationManager NavigationManager
+@inject NotificationService NotificationService
+@inject ICertificateService CertificateService
+@inject ILogger<Certificate> Logger
+
+@rendermode InteractiveServer
+
+<h3>Add New Certification</h3>
+
+<RadzenTemplateForm TItem="CertificateView" Data=@cert Submit=@OnValidSubmit InvalidSubmit=@OnInvalidSubmit>
+    <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" Variant="@variant">
+        <RadzenFormField Text="Certification Name" Variant="@variant">
+            <ChildContent>
+                <RadzenTextBox Name="CertificationName" @bind-Value=@cert.Name Placeholder="Certification Name" />
+            </ChildContent>
+        </RadzenFormField>
+        <RadzenFormField Text="Abbreviation" Variant="@variant">
+            <ChildContent>
+                <RadzenTextBox Name="Abbreviation" @bind-Value=@cert.Abbreviation Placeholder="Abbreviation" />
+            </ChildContent>
+        </RadzenFormField>
+    </RadzenStack>
+    <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem">
+        <RadzenFormField Text="Required CEU's" Variant="@variant">
+            <ChildContent>
+                <RadzenNumeric @bind-Value=@cert.CeusRequired />
+            </ChildContent>
+        </RadzenFormField>
+        <RadzenFormField Text="CeuDueDate" Variant="@variant">
+            <ChildContent>
+                <RadzenDatePicker @bind-Value=@cert.CeuDueDate ShowTime="@false" />
+            </ChildContent>
+        </RadzenFormField>
+        <RadzenFormField Text="Certification Months" Variant="@variant">
+            <ChildContent>
+                <RadzenNumeric @bind-Value=@cert.CertificateTrainingMonths />
+            </ChildContent>
+        </RadzenFormField>
+    </RadzenStack>
+    <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem">
+        <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" Style="margin-right: 0.5rem" />
+        <RadzenButton ButtonType="ButtonType.Button" Text="Cancel" Click="@(() => NavigationManager.NavigateTo("/Certifications/ViewCertifications"))" />
+    </RadzenStack>
+</RadzenTemplateForm>
+
+@code {
+    // Form styling presets
+    Variant variant = Variant.Outlined;
+
+    // Page properties
+    private CertificateView cert = new CertificateView();
+
+
+    // Methods
+    private async Task OnValidSubmit()
+    {
+        cert.InProcess = true;
+        int id = await CertificateService.AddCertificateAsync(cert);
+
+        if(id> 0)
+        {
+            NavigationManager.NavigateTo($"/Certifications/ViewCertifications?success=True&id={id}");
+        }
+        else
+        {
+            
+        }
+    }
+
+    private void OnInvalidSubmit()
+    {
+        NotificationService.Notify(new NotificationMessage(){Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Please fill out all required fields."});}
+}

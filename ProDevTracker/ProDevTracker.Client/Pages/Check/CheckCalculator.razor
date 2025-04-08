@@ -1,0 +1,66 @@
+﻿@page "/CheckCalculator"
+
+<h3>CheckCalculator</h3>
+
+@code {
+    // Input Values
+    public int _client = 0;
+    public double? _taxPercentage;
+    public double? _sharePercentage;
+    public decimal? _deductionAmount;
+    public decimal? _averageBillable;
+    public decimal? _budget;
+
+    // Calculated Values
+    public decimal? _total;
+    public decimal? _taxDollars;
+    public decimal? _shareDollars;
+    public decimal? _netAmount;
+    public decimal? _biweekly;
+    public decimal? _extra;
+    public int? _weeksToOneHundred;
+
+    // Constants
+    public decimal? DOLLARGOAL = 100000.00m;
+
+    public void CalculateTotal()
+    {
+        if(_client > 0 && _taxPercentage > 0 && _sharePercentage > 0 && _deductionAmount >= 0 && _averageBillable > 0)
+        {
+            _total = (decimal)(_client * _averageBillable);
+            _shareDollars = (decimal)(_total * ((decimal)_sharePercentage / 100));
+            _taxDollars = _shareDollars * ((decimal) _taxPercentage / 100);
+            _netAmount = _shareDollars - _taxDollars;
+            _biweekly = _netAmount * 2 - _deductionAmount;
+            _extra = _biweekly - _budget;
+            _weeksToOneHundred = (int)Math.Round((DOLLARGOAL.GetValueOrDefault() / _shareDollars.GetValueOrDefault()), 0);
+        }
+        else
+        {
+            
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        CalculateTotal();
+    }
+
+    private void ReCalculate()
+    {
+        StateHasChanged();
+        CalculateTotal();
+    }
+
+    public void TaxChange(ChangeEventArgs e)
+    {
+        CalculateTotal();
+        Console.WriteLine($"Tax percentage changed: {e.Value}");
+    }
+
+    private void paramUpdate(decimal? value)
+    {
+        CalculateTotal();
+    }
+ }
