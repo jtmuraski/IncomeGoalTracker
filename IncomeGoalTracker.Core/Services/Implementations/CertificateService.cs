@@ -14,11 +14,16 @@ namespace IncomeGoalTracker.Core.Services.Implementations
     public class CertificateService : ICertificateService
     {
         private readonly ICertificateRepo _certificateRepo;
+        private readonly IClassCeuRepo _classCeuRepo;
+        private readonly ITrainingClassRepo _trainingClassRepo;
+        private readonly ITrainingClassService _trainingClassService;
         private readonly ILogger<CertificateService> _logger;
 
-        public CertificateService(ICertificateRepo certificateRepo, ILogger<CertificateService> logger)
+        public CertificateService(ICertificateRepo certificateRepo, ITrainingClassRepo trainingClassRepo, ITrainingClassService trainingClassService, ILogger<CertificateService> logger)
         {
             _certificateRepo = certificateRepo;
+            _trainingClassRepo = trainingClassRepo;
+            _trainingClassService = trainingClassService;
             _logger = logger;
         }
 
@@ -41,7 +46,9 @@ namespace IncomeGoalTracker.Core.Services.Implementations
             List<CertificateView> certificateViews = new List<CertificateView>();
             foreach (Certificate cert in certificates)
             {
-                cert.
+                IEnumerable<TrainingClass> classes = await _trainingClassService.GetTrainingClassesByCertificateIdAsync(cert.Id);
+                cert.TrainingClasses = classes.ToList();
+
                 certificateViews.Add(CertificateMapper.MapToView(cert));
             }
             return certificateViews;

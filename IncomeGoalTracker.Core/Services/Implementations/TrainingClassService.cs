@@ -148,6 +148,49 @@ namespace IncomeGoalTracker.Core.Services.Implementations
             }
         }
 
+        public async Task<IEnumerable<TrainingClass>> GetTrainingClassesByCertificateIdAsync(int certificateId)
+        {
+            try
+            {
+                _logger.LogInformation($"Getting Training Classes for Certification Id {certificateId}");
+                IEnumerable<TrainingClass> trainingClasses = await _trainingClassRepo.GetTrainingClassesByCertificateIdAsync(certificateId);
+                List<TrainingClassView> trainingClassViews = new List<TrainingClassView>();
+
+                if (trainingClasses.Any())
+                {
+                    _logger.LogInformation("Getting Class CEU's for training classes");
+                    foreach (var trainingClass in trainingClasses)
+                    {
+                        IEnumerable<ClassCeu> classCeus = await _classCeuRepo.GetClassCeuForTrainingClassAsync(trainingClass.Id);
+                        trainingClass.ClassCeus = classCeus.ToList();
+
+                    }
+
+                    return trainingClasses;
+                }
+                else
+                {
+                    _logger.LogInformation("No training classes found");
+                    return Enumerable.Empty<TrainingClass>();
+                }
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError($"*****SQL Exception*****");
+                _logger.LogError(ex.Message);
+                _logger.LogError("************************");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"*****Exception*****");
+                _logger.LogError(ex.Message);
+                _logger.LogError("************************");
+                throw;
+            }
+
+        }
+
         public async Task<bool> UpdateTrainingClassAsync(TrainingClass trainingClass)
         {
             try

@@ -69,6 +69,19 @@ namespace IncomeGoalTracker.Data.Repositories
             }
         }
 
+        public async Task<IEnumerable<TrainingClass>> GetTrainingClassesByCertificateIdAsync(int certificateId)
+        {
+            string query = @"SELECT tc.* 
+                             FROM TrainingClass tc
+                             INNER JOIN ClassCeu ce ON tc.Id = ce.TrainingClassId
+                             WHERE ce.CertificateId = @CertificateId;";
+
+            using(var connection = _conn.CreateConnection())
+            {
+                return await connection.QueryAsync<TrainingClass>(query, new { CertificateId = certificateId });
+            }
+        }
+
         public async Task<bool> UpdateTrainingClassAsync(TrainingClass trainingClass)
         {
             string query = @"UPDATE TrainingClass SET Name = @Name,
