@@ -16,6 +16,7 @@ namespace IncomeGoalTracker.Core.Interfaces
         Task<int> AddTrainingClassAsync(TrainingClass trainingClass);
         Task<bool> DeleteTrainingClassAsync(int id);
         Task<bool> UpdateTrainingClassAsync(TrainingClass trainingClass);
+        Task<IEnumerable<TrainingClass>> GetTrainingClassesByCertificateIdAsync(int certificateId);
 
     }
 }
