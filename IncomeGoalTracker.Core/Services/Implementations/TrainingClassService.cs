@@ -79,6 +79,14 @@ namespace IncomeGoalTracker.Core.Services.Implementations
             try
             {
                 _logger.LogInformation($"Deleting Training Class {id}");
+                // Delete the Class CEU's first to avoid foreign key constraint violations
+                bool classCeuComplete = await _classCeuRepo.DeleteTrainingClassCeusAsync(id);
+                if (!classCeuComplete)
+                {
+                    _logger.LogError($"Failed to delete Class CEU's for Training Class {id}");
+                    return false;
+                }
+
                 bool complete = await _trainingClassRepo.DeleteTrainingClassAsync(id);
                 if(complete)
                 {
