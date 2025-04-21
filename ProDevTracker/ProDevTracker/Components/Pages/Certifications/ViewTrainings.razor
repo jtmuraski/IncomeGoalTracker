@@ -7,6 +7,7 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using System.Drawing
 @using Radzen.Blazor.Rendering
+@using System.Text.Json
 
 @inject NotificationService NotificationService
 @inject NavigationManager NavigationManager
@@ -70,7 +71,7 @@ else
                 }
             </RadzenStack>
             <RadzenStack Orientation="Orientation.Horizontal">
-                <RadzenButton Click="@(() => NavigationManager.NavigateTo($"/Certifications/EditTraining/{selectedTrainings[0].Id}"))" Text="Edit Training" ButtonStyle="ButtonStyle.Secondary" />
+                <RadzenButton Click="@(() => NavigationManager.NavigateTo($"/Certifications/AddTraining/{selectedTrainings[0].Id}"))" Text="Edit Training" ButtonStyle="ButtonStyle.Secondary" />
                 <RadzenButton Text="Delete Training" ButtonStyle="ButtonStyle.Danger" Click="@(() => @ConfirmDeleteTraining(selectedTrainings[0]))" />
             </RadzenStack>
         </RadzenCard>

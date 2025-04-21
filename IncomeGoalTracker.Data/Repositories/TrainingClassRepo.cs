@@ -87,8 +87,8 @@ namespace IncomeGoalTracker.Data.Repositories
             string query = @"UPDATE TrainingClass SET Name = @Name,
                                                     Provider = @Provider,
                                                     CeusEarned = @CeusEarned,
-                                                    DateComplete = @DateComplate,
-                                                    CertificaterLocation = @CertitificateLocation
+                                                    DateComplete = @DateComplete,
+                                                    CertificateLocation = @CertificateLocation
                                                     WHERE Id = @Id;";
 
             using (var connection = _conn.CreateConnection())

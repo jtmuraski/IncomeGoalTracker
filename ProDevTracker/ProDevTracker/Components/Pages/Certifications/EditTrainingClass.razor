@@ -1,5 +1,26 @@
-﻿<h3>EditTrainingClass</h3>
+﻿@using IncomeGoalTracker.Core.Models.Ceu
+@using IncomeGoalTracker.Core.Interfaces
+@using IncomeGoalTracker.Core.Services
+@using IncomeGoalTracker.Core.Services.Interfaces
+@using Microsoft.AspNetCore.WebUtilities
+@using System.Drawing
+@using Radzen.Blazor.Rendering
+
+@inject NotificationService NotificationService
+@inject NavigationManager NavigationManager
+@inject ICertificateService CertificateService
+@inject ITrainingClassService TrainingClassService
+@inject DialogService DialogService
+
+<h3>EditTrainingClass</h3>
 
 @code {
+    // Page Parameters
+    [Parameter]
+    public TrainingClassView? trainingClass { get; set; }
 
+    // Page Variables
+
+
+    // Page Methods
 }

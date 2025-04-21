@@ -1,4 +1,4 @@
-﻿@page "/Certifications/AddTraining"
+﻿@page "/Certifications/AddTraining/{TrainingClassId:int?}"
 
 @rendermode InteractiveServer
 
@@ -48,7 +48,7 @@
                 <RadzenFormField Name="Certification" Variant="@variant">
                     <ChildContent>
                         <RadzenDropDown Data="@certificates" TextProperty="Name" ValueProperty="Id"
-                                        @bind-Value=item.CertificateId Placeholder="Select Certification" />
+                        @bind-Value=item.CertificateId Placeholder="Select Certification" />
                     </ChildContent>
                 </RadzenFormField>
                 <RadzenFormField Name="Ceu Hours" Variant="@variant">
@@ -68,16 +68,21 @@
 </RadzenTemplateForm>
 
 @code {
-    // Form Syling Presets
-    Variant variant = Variant.Outlined;
+        // Page Parameters
+        [Parameter]
+        public int? TrainingClassId { get; set; }
 
-    // Page Properties
-    TrainingClassView trainingClass = new TrainingClassView();
-    List<ClassCeuView> ceuView = new List<ClassCeuView>();
-    List<CertificateView> certificates = new List<CertificateView>();
+        // Form Syling Presets
+        Variant variant = Variant.Outlined;
 
-    decimal? minCeus = (decimal?)0.10;
-    decimal? maxCeus = (decimal?)20.0;
+        // Page Properties
+        TrainingClassView trainingClass = new TrainingClassView();
+        List<ClassCeuView> ceuView = new List<ClassCeuView>();
+        List<CertificateView> certificates = new List<CertificateView>();
+
+        bool isEditing = false;
+        decimal? minCeus = (decimal?)0.10;
+        decimal? maxCeus = (decimal?)20.0;
 
     // Page Lifecycle Methods
     protected override async Task OnInitializedAsync()
@@ -85,6 +90,30 @@
         base.OnInitialized();
         var tempCertificates = await CertificateService.GetActiveCertificatesAsync();
         certificates = tempCertificates.ToList();
+
+        Logger.LogInformation(TrainingClassId.HasValue ? "Training Class ID is present" : "Training Class ID is not present");
+        if(TrainingClassId.HasValue)
+        {
+            isEditing = true;
+            Logger.LogInformation("Editing Training Class with ID: {TrainingClassId}", TrainingClassId.Value);
+
+            trainingClass = await TrainingClassService.GetTrainingClassByIdAsync(TrainingClassId.Value);
+            if (trainingClass != null)
+            {
+                Logger.LogInformation($"Training Class found: {trainingClass.Name}");
+                ceuView = trainingClass.ClassCeus.ToList();
+            }
+            else
+            {
+                NotificationService.Notify(new NotificationMessage()
+                {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "Error",
+                        Detail = "Training Class not found.",
+                        Duration = 4000
+                });
+            }
+        }
     }
 
     // Page Actions/Methods
@@ -106,14 +135,30 @@
     {
         try
         {
-            bool success = await TrainingClassService.AddTrainingClassAsync(trainingClass, ceuView);
-            NotificationService.Notify(new NotificationMessage()
-                {
-                    Severity = NotificationSeverity.Success,
-                    Summary = "Success",
-                    Detail = "Training Class added successfully.",
-                    Duration = 4000
-                });
+            bool success;
+            if(isEditing)
+            {
+                trainingClass.ClassCeus = ceuView;
+                success = await TrainingClassService.UpdateTrainingClassAsync(trainingClass);
+                NotificationService.Notify(new NotificationMessage()
+                    {
+                        Severity = NotificationSeverity.Success,
+                        Summary = "Success",
+                        Detail = "Training Class UPDATED successfully.",
+                        Duration = 4000
+                    });
+            }
+            else
+            {
+                success = await TrainingClassService.AddTrainingClassAsync(trainingClass, ceuView);
+                NotificationService.Notify(new NotificationMessage()
+                    {
+                        Severity = NotificationSeverity.Success,
+                        Summary = "Success",
+                        Detail = "Training Class added successfully.",
+                        Duration = 4000
+                    });
+            }
             NavigationManager.NavigateTo("/Certifications/ViewCertifications");
         }
         catch (Exception ex)
