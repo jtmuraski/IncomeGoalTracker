@@ -1,0 +1,175 @@
+﻿@page "/Certifications/ViewTrainings"
+
+@using IncomeGoalTracker.Core.Models.Ceu
+@using IncomeGoalTracker.Core.Interfaces
+@using IncomeGoalTracker.Core.Services
+@using IncomeGoalTracker.Core.Services.Interfaces
+@using Microsoft.AspNetCore.WebUtilities
+@using System.Drawing
+@using Radzen.Blazor.Rendering
+@using System.Text.Json
+
+@inject NotificationService NotificationService
+@inject NavigationManager NavigationManager
+@inject ICertificateService CertificateService
+@inject ITrainingClassService TrainingClassService
+@inject DialogService DialogService
+
+@rendermode InteractiveServer
+
+<h3>View Trainings</h3>
+
+@if(isLoading)
+{
+    <h4>Loading Training Classes</h4>
+    <RadzenProgressBarCircular Indeterminate="true" />
+}
+else
+{
+    if(trainingViews is null)
+    {
+        <h3>You have not added any trianing class or courses yet!</h3>
+        <p>Please click on the 'Add Training' button below to add a new training course</p>
+
+        <RadzenStack Orientation="Orientation.Horizontal">
+            <RadzenButton Click="@NavigateToAddTraining" Text="Add Training" ButtonStyle="ButtonStyle.Primary" />
+        </RadzenStack>
+    }
+    else
+    {
+        <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="true" FilterMode="FilterMode.Advanced" AllowSorting="true"
+        PageSize="10" Data="@trainingViews" @bind-Value="@selectedTrainings" SelectionMode="DataGridSelectionMode.Single">
+            <HeaderTemplate>
+                <RadzenButton Click="@NavigateToAddTraining" Text="Add Training" ButtonStyle="ButtonStyle.Primary" />
+            </HeaderTemplate>
+            <Columns>
+                <RadzenDataGridColumn Property="@nameof(TrainingClassView.Name)" Title="Class Name" />
+                <RadzenDataGridColumn Property="@nameof(TrainingClassView.Provider)" Title="Training Provider" />
+                <RadzenDataGridColumn Property="@nameof(TrainingClassView.CeusEarned)" Title="Earned CEU's" />
+                <RadzenDataGridColumn Property="@nameof(TrainingClassView.DateComplete)" Title="Date Completed" />
+            </Columns>
+        </RadzenDataGrid>
+    }
+
+    @if (selectedTrainings.Count > 0)
+    {
+        <h4>Selected Training Class</h4>
+        <RadzenCard>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem">
+                <RadzenTextBox Name="Name" Value="@selectedTrainings[0].Name" ReadOnly="true" />
+                <RadzenTextBox Name="Provider" Value="@selectedTrainings[0].Provider" ReadOnly="true" />
+                <RadzenTextBox Name="CeusEarned" Value="@selectedTrainings[0].CeusEarned.ToString()" ReadOnly="true" />
+                <RadzenTextBox Name="DateComplete" Value="@selectedTrainings[0].DateComplete.ToShortDateString()" ReadOnly="true" />
+            </RadzenStack>
+            <RadzenStack Orientation="Orientation.Vertical" Gap="1rem">
+                @foreach (var classCeu in selectedTrainings[0].ClassCeus)
+                {
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem">
+                        <RadzenTextBox Name="CeuName" Value="@GetCertificationName(classCeu.CertificateId)" ReadOnly="true" />
+                        <RadzenTextBox Name="CeuHours" Value="@classCeu.CeuHours.ToString()" ReadOnly="true" />
+                    </RadzenStack>
+                }
+            </RadzenStack>
+            <RadzenStack Orientation="Orientation.Horizontal">
+                <RadzenButton Click="@(() => NavigationManager.NavigateTo($"/Certifications/AddTraining/{selectedTrainings[0].Id}"))" Text="Edit Training" ButtonStyle="ButtonStyle.Secondary" />
+                <RadzenButton Text="Delete Training" ButtonStyle="ButtonStyle.Danger" Click="@(() => @ConfirmDeleteTraining(selectedTrainings[0]))" />
+            </RadzenStack>
+        </RadzenCard>
+    }
+}
+
+@code {
+    List<TrainingClassView> trainingViews = new List<TrainingClassView>();
+    List<CertificateView> certificateViews = new List<CertificateView>();
+    IList<TrainingClassView> selectedTrainings = new List<TrainingClassView>();
+
+    RadzenButton button;
+    Popup popup;
+
+    bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        await LoadTrainings();
+        await LoadCertificates();
+        selectedTrainings = new List<TrainingClassView>();
+        isLoading = false;
+
+        selectedTrainings = new List<TrainingClassView>();
+    }
+
+    private async Task LoadTrainings()
+    {
+        var trainings = await TrainingClassService.GetAllTrainingClassesAsync();
+        if(trainings != null)
+        {
+            trainingViews = trainings.ToList();
+        }
+
+        StateHasChanged();
+    }
+
+    private void NavigateToAddTraining()
+    {
+        NavigationManager.NavigateTo("/Certifications/AddTraining");
+    }
+
+    private async Task LoadCertificates()
+    {
+        var certificates = await CertificateService.GetActiveCertificatesAsync();
+        certificateViews = certificates.ToList();
+
+        isLoading = false;
+
+        StateHasChanged();
+    }
+
+    private string GetCertificationName(int certId)
+    {
+        var cert = certificateViews.FirstOrDefault(cert => cert.Id == certId);
+        return cert != null ? cert.Name : "Unknown";
+
+    }
+
+    private async Task ConfirmDeleteTraining(TrainingClassView training)
+    {
+        var result = await DialogService.Confirm("Are you sure you want to delete this training class?", $"Delete {training.Name}?", new ConfirmOptions()
+            {
+                OkButtonText = "Yes",
+                CancelButtonText = "No"
+            });
+
+        bool deleteIsSuccessful = false;
+
+        if (result.HasValue && result.Value)
+        {
+            deleteIsSuccessful = await TrainingClassService.DeleteTrainingClassAsync(training.Id);
+        }
+
+        await LoadTrainings();
+        selectedTrainings.Clear();
+
+        if (deleteIsSuccessful)
+        {
+            NotificationService.Notify(new NotificationMessage()
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Success",
+                    Detail = "Training Class Deleted Successfully"
+                });
+        }
+        else
+        {
+            NotificationService.Notify(new NotificationMessage()
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error",
+                    Detail = "Failed to delete training class"
+                });
+        }
+
+        StateHasChanged();
+    }
+}
